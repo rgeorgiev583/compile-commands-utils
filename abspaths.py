@@ -8,12 +8,8 @@ import sys
 
 def make_include_paths_in_compile_commands_abs(path: str):
     compile_commands_path = os.path.join(path, 'compile_commands.json')
-    try:
-        with open(compile_commands_path, 'r') as compile_commands_file:
-            compile_commands = json.load(compile_commands_file)
-    except OSError:
-        print(format('error: file {} does not exist', compile_commands_path))
-        return
+    with open(compile_commands_path, 'r') as compile_commands_file:
+        compile_commands = json.load(compile_commands_file)
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-I', action='append',

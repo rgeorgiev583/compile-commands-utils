@@ -15,12 +15,8 @@ def get_relpath_with_prefix(path: str, prefix: str, curdir: str) -> str:
 
 def get_include_paths_from_compile_commands(path: str):
     compile_commands_path = os.path.join(path, 'compile_commands.json')
-    try:
-        with open(compile_commands_path, 'r') as compile_commands_file:
-            compile_commands = json.load(compile_commands_file)
-    except OSError:
-        print(format('error: file {} does not exist', compile_commands_path))
-        return
+    with open(compile_commands_path, 'r') as compile_commands_file:
+        compile_commands = json.load(compile_commands_file)
 
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-I', action='append',

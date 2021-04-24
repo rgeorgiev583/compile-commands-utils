@@ -28,16 +28,20 @@ argparser.add_argument(
 args = argparser.parse_args()
 
 if not args.use_relative_paths:
+    args.base_src_file = os.path.abspath(args.base_src_file)
     args.build_dir = os.path.abspath(args.build_dir)
 
 with open(args.compile_commands_file, 'r') as compile_commands_file:
     compile_commands = json.load(compile_commands_file)
 
+compile_commands_map = {}
+for entry in compile_commands:
+    compile_commands_map[entry['file']] = entry
+
 
 def get_cmdline(filename: str) -> Optional[str]:
-    for entry in compile_commands:
-        if entry['file'] == filename:
-            return entry['command']
+    if filename in compile_commands_map:
+        return compile_commands_map[filename]['command']
     return None
 
 

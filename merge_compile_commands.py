@@ -20,6 +20,8 @@ argparser = argparse.ArgumentParser(
 add_opts_to_argparser(argparser, True)
 argparser.add_argument('-S', '--subst-path', nargs='*', metavar='SRC_PATH:DST_PATH',
                        help='substitute SRC_PATH with DST_PATH in compilation database entries')
+argparser.add_argument('-I', '--include-path', nargs='*', metavar='PATH',
+                       help='append additional include PATH to compilation database entries')
 argparser.add_argument(
     'compile_commands_file', nargs='+', default=os.path.curdir, help='path to `compile_commands.json` file to merge')
 args = argparser.parse_args()
@@ -45,5 +47,10 @@ if args.base_src_file:
     for entry in generate_header_compile_commands(args, compile_commands_dict):
         compile_commands_dict[entry['file']] = entry
     compile_commands = list(compile_commands_dict.values())
+
+if args.include_path:
+    for entry in compile_commands:
+        for include_path in args.include_path:
+            entry["command"] = entry["command"] + " -I " + include_path
 
 json.dump(compile_commands, sys.stdout)
